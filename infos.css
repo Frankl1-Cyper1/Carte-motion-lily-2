@@ -1,0 +1,20 @@
+body{ background:#000; color:#fff; }
+.content{
+  margin-top:180px;
+  text-align:center;
+  padding:0 18px;
+}
+h1{ color:#ff001a; font-size:2.6rem; }
+p{ opacity:0.9; font-size:1.3rem; max-width:900px; margin:14px auto; line-height:1.5; }
+.formes-verte{ /* tu peux garder ton image comme sur accueil */
+  position: fixed;
+  top: 28%;
+  left: 50%;
+  width: 70%;
+  max-width: 450px;
+  transform: translateX(-50%);
+  opacity: 0.12;
+  filter: blur(4px);
+  pointer-events: none;
+  z-index: 1;
+}

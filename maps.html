@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+  <link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="acceuilstyle.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maps – Maps des émotions</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="maps.css"/>
+
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script defer src="maps.js"></script>
+</head>
+
+<body>
+  <!-- BURGER -->
+  <button class="burger-menu" id="burgerMaps" aria-label="Menu">☰</button>
+
+  <nav class="side-menu" id="sideMenuMaps">
+    <ul>
+      <li><a href="acceuil.html">Accueil</a></li>
+      <li><a href="maps.html">Inscrit tes émotions</a></li>
+      <li><a href="plans.html">Plans enregistrés</a></li>
+      <li><a href="infos.html">Infos</a></li>
+    </ul>
+  </nav>
+
+  <!-- Zone à capturer (sans UI) -->
+  <div id="captureArea">
+    <div id="maps"></div>
+    <canvas id="drawCanvas"></canvas>
+  </div>
+
+  <!-- Réglette droite -->
+  <aside class="right-rail" aria-label="Palette">
+    <div class="rail">
+      <!-- Couleurs + smileys posés à côté (sans bouger les couleurs) -->
+      <div class="rail-mid">
+        <div class="rail-colors" id="colorSelector">
+          <button class="c" data-color="#2F6B4A" aria-label="Vert"></button>
+          <button class="c" data-color="#9be42c" aria-label="Vert clair"></button>
+          <button class="c" data-color="#99bef5" aria-label="Bleu"></button>
+          <button class="c" data-color="#672fbd" aria-label="Violet"></button>
+          <button class="c" data-color="#941d53" aria-label="Rose foncé"></button>
+          <button class="c" data-color="#490f1b" aria-label="Bordeaux"></button>
+        </div>
+
+        <!-- Smileys “à côté” : juste décor + contour coloré -->
+        <div class="smiley happy" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" fill="none" stroke-width="2"/>
+            <circle cx="9" cy="10" r="1" />
+            <circle cx="15" cy="10" r="1" />
+            <path d="M8.5 13.2c1 2 6 2 7 0" fill="none" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <div class="smiley angry" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" fill="none" stroke-width="2"/>
+            <path d="M8 10l2-1" fill="none" stroke-width="2" stroke-linecap="round"/>
+            <path d="M16 10l-2-1" fill="none" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="9" cy="12" r="1" />
+            <circle cx="15" cy="12" r="1" />
+            <path d="M9 16c1.6-1.6 4.4-1.6 6 0" fill="none" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Outils : flèches côte à côte + gomme visible -->
+   <div class="rail-tools">
+  <div class="undo-redo-row">
+    <button class="tool-mini" id="toolUndo" title="Revenir en arrière">↶</button>
+    <button class="tool-mini" id="toolRedo" title="Retourner en avant">↷</button>
+  </div>
+
+  <button class="tool-mini" id="toolEraser" title="Gomme">⌫</button>
+</div>
+    </div>
+  </aside>
+
+  <!-- Bandeau bas : zoom + stylo/main + actions -->
+  <div class="bottom-bar">
+    <div class="zoom-block">
+      <button class="zbtn" id="zoomOut" aria-label="Zoom -">−</button>
+      <input type="range" id="zoomRange" min="12" max="19" value="14"/>
+      <button class="zbtn" id="zoomIn" aria-label="Zoom +">+</button>
+    </div>
+
+    <div class="mode-buttons" aria-label="Outils">
+  <button class="mode-btn active" id="toolBrush" title="Stylo">✎</button>
+  <button class="mode-btn" id="toolHand" title="Main">✋</button>
+
+  <!-- Molette taille plume/gomme -->
+  <div class="size-block" aria-label="Taille du trait">
+    <span class="size-label" title="Taille du trait">⌀</span>
+    <input id="brushSize" type="range" min="6" max="70" value="22" step="1">
+    <span class="size-value" id="brushSizeValue">22</span>
+  </div>
+</div>
+
+
+    <div class="spacer"></div>
+
+    <div class="actions">
+      <button class="glass-btn" id="savePlan"><span>Enregistrer</span></button>
+      <button class="glass-btn" id="download"><span>Télécharger</span></button>
+    </div>
+  </div>
+</body>
+</html>
+

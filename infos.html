@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Infos</title>
+  <link rel="stylesheet" href="infos.css">
+  <link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="acceuilstyle.css">
+</head>
+
+<body>
+  <div class="burger-menu" id="burgerInfos">☰</div>
+  <nav class="side-menu" id="sideMenuInfos">
+    <ul>
+      <li><a href="acceuil.html">Accueil</a></li>
+      <li><a href="maps.html">Inscrit tes émotions</a></li>
+      <li><a href="plans.html">Plans enregistré</a></li>
+      <li><a href="infos.html">Infos</a></li>
+    </ul>
+  </nav>
+  <div class="content">
+    <p>Maps des émotions est une page web interactive, qui a pour but de créer une cartographie des emotions par un prisme individuel pour la ville de Metz. </p>
+    <p>Réalisé par Lily Schuler et Franklin Michel 2025, dans le cadre du cours : Images numériques et générative. </p>
+  <p>Supervisé par Antonin Jousse. A l'ESAL de Metz </p>
+  </div>
+
+ <script>
+  const burgerInfos = document.getElementById("burgerInfos");
+  const sideMenuInfos = document.getElementById("sideMenuInfos");
+
+  burgerInfos.addEventListener("click", (e) => {
+    e.stopPropagation();
+    sideMenuInfos.classList.toggle("open");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!sideMenuInfos.classList.contains("open")) return;
+    if (sideMenuInfos.contains(e.target) || burgerInfos.contains(e.target)) return;
+    sideMenuInfos.classList.remove("open");
+  });
+</script>
+
+
+  <img src="images/formes verte.png" alt="" class="formes-verte">
+</body>
+</html>

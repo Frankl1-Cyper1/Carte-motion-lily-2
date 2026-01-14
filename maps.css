@@ -1,0 +1,375 @@
+/* /appliquer box-sizing partout/ -> évite les tailles bizarres avec padding/border */
+*{ box-sizing:border-box; }
+
+/* /donner une hauteur pleine page/ */
+html,body{ height:100%; }
+
+/* /style global de la page/ */
+body{
+  margin:0;                       /* /enlever marge navigateur/ */
+  background:#000;                /* /fond noir/ */
+  color:#fff;                     /* /texte blanc/ */
+  font-family: Arial, Helvetica, sans-serif; /* /police générale/ */
+  overflow:hidden;                /* /empêcher le scroll/ */
+}
+
+/* =========================
+   MAP + CANVAS
+   ========================= */
+
+/* /zone globale qui contient la carte + le dessin/ */
+#captureArea{ 
+  position:fixed;  /* /fixer à l’écran/ */
+  inset:0;         /* /coller aux bords (top/right/bottom/left = 0)/ */
+  z-index:1;       /* /niveau d’affichage/ */
+}
+
+/* /div Leaflet qui affiche la carte/ */
+#maps{ 
+  position:absolute; /* /placer dans captureArea/ */
+  inset:0;           /* /prendre tout l’espace/ */
+  z-index:1;         /* /en dessous du canvas/ */
+}
+
+/* /canvas de dessin au-dessus de la map/ */
+#drawCanvas{
+  position:absolute; inset:0;     /* /même taille que la map/ */
+  width:100%; height:100%;        /* /remplit toute la zone/ */
+  z-index:5;                      /* /au-dessus de la map/ */
+  pointer-events:auto;            /* /autoriser les clics sur le canvas/ */
+  touch-action:none;              /* /empêcher scroll/zoom tactile pendant le dessin/ */
+  cursor: crosshair;              /* /curseur en croix pour dessiner/ */
+}
+
+/* =========================
+   BURGER
+   ========================= */
+
+/* /bouton menu burger en haut à gauche/ */
+.burger-menu{
+  position:fixed; top:12px; left:12px;  /* /position sur l’écran/ */
+  z-index:5000;                         /* /au-dessus de tout/ */
+  background: #18171770;         /* /fond transparent sombre/ */
+  border:1px solid rgba(255,255,255,0.10); /* /contour léger/ */
+  border-radius:45px;                  /* /coins arrondis/ */
+  color:#000000;                          /* /couleur du symbole burger/ */
+  font-size:24px;                      /* /taille du symbole/ */
+  padding:10px 12px;                   /* /taille du bouton/ */
+  cursor:pointer;                      /* /curseur main/ */
+  backdrop-filter: blur(2px);         /* /effet glass (flou)/ */
+}
+
+/* =========================
+   SIDE MENU
+   ========================= */
+
+/* /menu latéral caché par défaut/ */
+.side-menu{
+  position:fixed; top:0; left:-280px; /* /décalé à gauche pour être invisible/ */
+  width:240px; height:100%;           /* /taille du menu/ */
+  z-index:4900;                       /* /sous le burger/ */
+  background: #181717d0;       /* /fond sombre/ */
+  backdrop-filter: blur(2px);         /* /léger flou/ */
+  padding-top: 90px;                  /* /espace en haut pour respirer/ */
+  transition:left .28s ease;          /* /animation ouverture/fermeture/ */
+}
+
+/* /quand on ajoute la classe open -> le menu apparaît/ */
+.side-menu.open{ left:0; }
+
+/* /liste menu sans puces/ */
+.side-menu ul{ list-style:none; margin:0; padding:0; }
+
+/* /espacement entre les lignes du menu/ */
+.side-menu li{ padding:18px 22px; }
+
+/* /style des liens du menu/ */
+.side-menu a{
+  color:#ffffff;          /* /texte rouge/ */
+  text-decoration:none;   /* /enlever soulignement/ */
+  font-weight:120;        /* /texte gras/ */
+  font-size:1.15rem;      /* /taille/ */
+}
+
+/* =========================
+   REGLETTE DROITE (palette)
+   ========================= */
+
+/* /conteneur général à droite/ */
+.right-rail{
+  position:fixed;     /* /fixé à l’écran/ */
+  right:16px;         /* /distance du bord droit/ */
+  top:90px;           /* /distance du haut/ */
+  bottom:110px;       /* /distance du bas (laisser place au bandeau)/ */
+  z-index:4000;       /* /au-dessus map/ */
+  display:flex;       /* /aligner/ */
+  align-items:center; /* /centrer verticalement le rail/ */
+}
+
+/* /le “tube” glass vertical/ */
+.rail{
+  width:88px;                                  /* /largeur/ */
+  height:100%;                                 /* /hauteur de toute la zone/ */
+  border-radius:45px;                          /* /arrondi/ */
+  background: rgba(10, 10, 12, 0.297);             /* /fond glass sombre/ */
+  border:1px solid rgba(255, 255, 255, 0.614);     /* /contour léger/ */
+  backdrop-filter: blur(2px);                 /* /flou glass/ */
+  display:flex;                                /* /layout vertical/ */
+  flex-direction:column;                       /* /en colonne/ */
+  justify-content:space-between;               /* /couleurs au milieu, outils en bas/ */
+  padding:12px 8px;                           /* /marges internes/ */
+}
+
+/* /zone centrale : couleurs + smileys (superposition)/ */
+.rail-mid{
+  position:center;      /* /permet aux smileys d'être en absolute/ */
+  flex:1;                 /* /prend l’espace au centre/ */
+  display:flex;           /* /centrer la colonne de couleurs/ */
+  align-items:center;
+  justify-content:none;
+}
+
+/* /colonne de boutons couleurs/ */
+.rail-colors{
+  display:flex;             /* /colonne/ */
+  flex-direction:column;    /* /vertical/ */
+  gap:10px;                 /* /espace entre couleurs/ */
+  align-items:center;       /* /centrer horizontalement/ */
+  padding:6px 0;            /* /petit padding/ */
+}
+
+/* /bouton couleur/ */
+.c{
+  width:42px; height:42px;                   /* /taille des couleurs/ */
+  border-radius:45px;                        /* /arrondi/ */
+  border:1px solid rgba(0, 0, 0, 0.242);   /* /contour léger/ */
+  cursor:pointer;                            /* /main/ */
+  background: rgba(255,255,255,0.05);        /* /fallback si pas de data-color/ */
+}
+
+/* /quand une couleur est sélectionnée/ */
+.c.selected{ outline:2px solid rgba(255,255,255,0.20); }
+
+/* /assigner les vraies couleurs selon data-color/ */
+.c[data-color="#2F6B4A"]{ background:#2F6B4A; } /* /vert/ */
+.c[data-color="#9be42c"]{ background:#9be42c; } /* /vert clair/ */
+.c[data-color="#99bef5"]{ background:#99bef5; } /* /bleu/ */
+.c[data-color="#672fbd"]{ background:#672fbd; } /* /violet/ */
+.c[data-color="#941d53"]{ background:#941d53; } /* /rose foncé/ */
+.c[data-color="#490f1b"]{ background:#490f1b; } /* /bordeaux/ */
+
+/* =========================
+   SMILEYS
+   ========================= */
+
+/* /smiley placé à côté des couleurs/ */
+.smiley{
+  position:absolute;   /* /superposé dans rail-mid/ */
+  right:10px;         /* /décalé à droite du rail/ */
+  width:26px;          /* /taille/ */
+  height:26px;         /* /taille/ */
+  opacity:0.95;        /* /légère transparence/ */
+}
+
+/* /svg du smiley prend toute la place/ */
+.smiley svg{
+  width:100%; height:100%;
+}
+
+/* /toutes les formes du svg prennent la couleur currentColor/ */
+.smiley svg *{
+  stroke: currentColor; /* /couleur du contour = style.color défini en JS/ */
+  fill: none;           /* /pas de remplissage/ */
+}
+
+/* /forcer le cercle contour/ */
+.smiley svg circle[fill="none"]{ stroke: currentColor; }
+
+/* /les petits yeux (cercles pleins) -> remplis avec currentColor/ */
+.smiley svg circle:not([fill="none"]){ fill: currentColor; stroke: none; }
+
+/* /position smiley haut (content)/ */
+.smiley.happy{ top:48px; }
+
+/* /position smiley bas (énervé)/ */
+.smiley.angry{ bottom:93px; }
+
+/* =========================
+   OUTILS EN BAS DU RAIL
+   ========================= */
+
+/* /conteneur outils : undo/redo/gomme/ */
+.rail-tools{
+  display:flex;
+  flex-direction:column;   /* empile les blocs */
+  gap:8px;
+  align-items:center;
+  padding-top:6px;
+}
+
+.undo-redo-row{
+  display:flex;
+  gap:6px;                 /* espace entre ↶ ↷ */
+  justify-content:center;
+}
+
+
+/* /style des boutons outils/ */
+.tool-mini{
+  width:30px; height:30px;                /* /taille/ */
+  border-radius:45px;                     /* /arrondi/ */
+  border:1px solid rgba(0, 0, 0, 0.14);/* /contour/ */
+  background: rgba(255,255,255,0.10);     /* /fond glass/ */
+  color:#fff;                             /* /couleur icône/ */
+  font-size:18px;                         /* /taille icône/ */
+  cursor:pointer;                         /* /main/ */
+}
+
+/* /quand outil actif (ex gomme)/ */
+.tool-mini.active{
+  outline:2px solid rgba(255,255,255,0.18); /* /surbrillance/ */
+  background: rgba(255,255,255,0.14);      /* /un peu plus clair/ */
+}
+
+/* =========================
+   BARRE DU BAS
+   ========================= */
+
+/* /bandeau bas fixe/ */
+.bottom-bar{
+  position:fixed; left:0; right:0; bottom:0; /* /collé en bas/ */
+  height:83px;                                /* /hauteur/ */
+  z-index:4200;                               /* /au-dessus map/ */
+  display:flex;                               /* /tout aligner en ligne/ */
+  align-items:center;                         /* /centrer verticalement/ */
+  gap:12px;                                   /* /espace entre blocs/ */
+  padding:0 14px;                             /* /marge gauche droite/ */
+  background: rgba(0,0,0,0.40);               /* /fond sombre transparent/ */
+  border-top: 1px solid rgba(255,255,255,0.08); /* /ligne haut/ */
+  backdrop-filter: blur(2px);                /* /effet glass/ */
+}
+
+/* /bloc zoom (boutons + slider)/ */
+.zoom-block{
+  display:flex;                           /* /aligner les éléments/ */
+  align-items:center;
+  gap:10px;                               /* /espacement/ */
+  padding:10px 12px;                      /* /padding/ */
+  border-radius:45px;                     /* /arrondi/ */
+  background: rgba(10, 10, 12, 0.169);        /* /fond glass/ */
+  border:1px solid rgba(255, 255, 255, 0.386);/* /contour/ */
+}
+
+/* /boutons + et - du zoom/ */
+.zbtn{
+  width:44px; height:44px;                  /* /taille/ */
+  border-radius:45px;                       /* /arrondi/ */
+  border:1px solid rgba(255, 255, 255, 0.406);  /* /contour/ */
+  background: rgba(255,255,255,0.08);       /* /fond/ */
+  color:#fff;                               /* /texte icône/ */
+  font-size:22px;                           /* /taille/ */
+  cursor:pointer;                           /* /main/ */
+}
+
+/* /slider zoom : largeur responsive/ */
+#zoomRange{ width:min(260px, 38vw); }
+
+/* /bloc stylo + main/ */
+.mode-buttons{
+  display:flex; /* /mettre les boutons côte à côte/ */
+  gap:10px;     /* /espacement/ */
+}
+
+/* /bouton stylo / main/ */
+.mode-btn{
+  width:52px; height:52px;                  /* /taille/ */
+  border-radius:45px;                       /* /arrondi/ */
+  border:1px solid rgba(255, 255, 255, 0.326);  /* /contour/ */
+  background: rgba(255,255,255,0.08);       /* /fond glass/ */
+  color:#fff;                               /* /icône/ */
+  font-size:22px;                           /* /taille icône/ */
+  cursor:pointer;                           /* /main/ */
+}
+
+/* /bouton actif (stylo ou main sélectionné)/ */
+.mode-btn.active{
+  outline:2px solid rgba(255,255,255,0.18); /* /surbrillance/ */
+  background: rgba(0, 0, 0, 0.12);        /* /teinte rouge/ */
+}
+
+/* /espace flexible pour pousser les boutons à droite/ */
+.spacer{ flex:1; }
+
+/* /bloc actions (enregistrer + télécharger)/ */
+.actions{ 
+  display:flex;     /* /en ligne/ */
+  gap:12px;         /* /espace/ */
+  align-items:center;
+}
+
+/* /boutons Enregistrer / Télécharger/ */
+.glass-btn{
+  padding:14px 18px;                        /* /taille/ */
+  border-radius:45px;                       /* /arrondi/ */
+  border:1px solid rgba(255, 255, 255, 0.311);  /* /contour/ */
+  background: rgba(255, 255, 255, 0.071);       /* /fond glass/ */
+  color:#fff;                               /* /texte/ */
+  font-weight:900;                          /* /gras/ */
+  cursor:pointer;                           /* /main/ */
+}
+
+/* =========================
+   RESPONSIVE MOBILE
+   ========================= */
+@media (max-width:720px){
+
+  /* /rapprocher la réglette du bord/ */
+  .right-rail{ right:10px; }
+
+  /* /réduire largeur du rail/ */
+  .rail{ width:68px; }
+
+  /* /réduire taille des couleurs/ */
+  .c{ width:36px; height:36px; border-radius:11px; }
+
+  /* /réduire smileys/ */
+  .smiley{ right:-28px; width:24px; height:24px; }
+
+  /* /réduire boutons outils/ */
+  .tool-mini{ width:32px; height:32px; border-radius:11px; font-size:17px; }
+}
+
+/* ===== Taille du trait (molette) ===== */
+.size-block{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:45px;
+  background: rgba(10, 10, 12, 0.169);
+  border:1px solid rgba(255, 255, 255, 0.386);
+}
+
+.size-label{
+  opacity:0.9;
+  font-weight:700;
+  font-size:16px;
+}
+
+#brushSize{
+  width: min(180px, 22vw);
+}
+
+.size-value{
+  width:34px;
+  text-align:right;
+  opacity:0.9;
+  font-weight:700;
+}
+
+/* Mobile : rendre la molette un peu plus compacte */
+@media (max-width:720px){
+  #brushSize{ width: min(140px, 28vw); }
+  .size-block{ gap:8px; padding:8px 10px; }
+}
+

@@ -1,0 +1,105 @@
+/* =========================
+   THEME GLOBAL (comme accueil)
+   ========================= */
+:root{
+  --bg: #000;
+  --text: #fff;
+
+  --red: #ff001a;
+  --glass: rgba(255,255,255,0.08);
+  --glass2: rgba(255,0,26,0.08);
+  --stroke: rgba(255,255,255,0.10);
+  --strokeRed: rgba(255,0,26,0.14);
+
+  --blur: 12px;
+  --radius: 18px;
+  --radiusSm: 14px;
+
+  --shadow: 0 6px 30px rgba(255,0,26,0.08), inset 0 -2px 6px rgba(255,255,255,0.02);
+
+  /* palette émotions */
+  --c1:#2F6B4A;
+  --c2:#9be42c;
+  --c3:#99bef5;
+  --c4:#672fbd;
+  --c5:#941d53;
+  --c6:#490f1b;
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Montserrat", Arial, sans-serif;
+}
+
+/* ---------- Burger (même partout) ---------- */
+.burger-menu{
+  position: fixed;
+  top: 12px; left: 12px;
+  z-index: 5000;
+
+  width:58px; height:58px;
+  border-radius: var(--radius);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  color:#000; /* comme accueil */
+  font-size:2.1rem;
+  cursor:pointer;
+
+  background: var(--glass);
+  border:1px solid var(--stroke);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+}
+
+/* ---------- Menu latéral (même partout) ---------- */
+.side-menu{
+  position: fixed;
+  left: -260px; top: 0;
+  width: 260px; height: 100%;
+  z-index: 4900;
+
+  background: rgba(8,8,8,0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  padding-top: 90px;
+  transition: left 0.45s ease;
+  border-right: 2px solid var(--strokeRed);
+}
+.side-menu.open{ left:0; }
+
+.side-menu ul{ list-style:none; padding:0; margin:0; }
+.side-menu li{ padding:18px 24px; }
+.side-menu a{
+  color: var(--text);
+  text-decoration:none;
+  font-size: 1.2rem;
+  display:block;
+  transition: color .2s;
+}
+.side-menu a:hover{ color: var(--red); }
+
+/* ---------- Boutons glass (même partout) ---------- */
+.glass-btn, .glass{
+  border: 1px solid rgba(255,255,255,0.14);
+  background: linear-gradient(180deg, rgba(255,0,26,0.08), rgba(255,0,26,0.04));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  box-shadow: var(--shadow);
+  transition: transform .25s ease, box-shadow .25s ease, opacity .3s;
+}
+.glass-btn:hover, .glass:hover{
+  transform: scale(1.03);
+  box-shadow: 0 12px 40px rgba(255,0,26,0.12), inset 0 -3px 8px rgba(255,255,255,0.03);
+}
+
+/* ---------- Titres / textes ---------- */
+h1,h2,h3{ margin:0; font-weight:700; letter-spacing:1px; }
+a{ color:inherit; }
